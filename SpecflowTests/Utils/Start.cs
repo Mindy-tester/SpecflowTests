@@ -14,7 +14,7 @@ namespace SpecflowTests.Utils
 {
     public class Start : Driver
     {
-        [Before]
+        [BeforeScenario]
         public void SetUp()
         {
             //Launch the browser
@@ -27,22 +27,24 @@ namespace SpecflowTests.Utils
                       
         }
 
-        [After]
-        public static void TearDown()
+        [AfterScenario]
+        public void TearDown()
         {
-            Driver.driver.Manage().Timeouts().ImplicitWait = TimeSpan.FromSeconds(10);
+            driver.Manage().Timeouts().ImplicitWait = TimeSpan.FromSeconds(10);
             // Screenshot
-            string img = SaveScreenShotClass.SaveScreenshot(Driver.driver, "Report");
+            string img = SaveScreenShotClass.SaveScreenshot(driver, "Report");
             Test.Log(LogStatus.Info, "Snapshot below: " + Test.AddScreenCapture(img));
 
             // end test. (Reports)
-            CommonMethods.Extent.EndTest(Test);
+            //CommonMethods.Extent.EndTest(Test);
+            Extent.EndTest(Test);
 
             // calling Flush writes everything to the log file (Reports)
-            CommonMethods.Extent.Flush();
+           // CommonMethods.Extent.Flush();
+            Extent.Flush();
 
             //Close the browser
-            Driver.driver.Quit();
+            driver.Close();
         }
 
     }

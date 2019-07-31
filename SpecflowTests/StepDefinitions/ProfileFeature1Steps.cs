@@ -16,8 +16,8 @@ namespace SpecflowTests.StepDefinitions
         [Given(@"I clicked on the Languages tab under Profile page")]
         public void GivenIClickedOnTheLanguagesTabUnderProfilePage()
         {
-            //wait
-            Thread.Sleep(2000);
+            //wait for language 
+            Driver.driver.Manage().Timeouts().ImplicitWait = TimeSpan.FromSeconds(20);
 
             // Click on language tab
             Driver.driver.FindElement(By.XPath("//a[text() = 'Languages']")).Click();
@@ -52,10 +52,10 @@ namespace SpecflowTests.StepDefinitions
             {
                 //Start the Reports
                 CommonMethods.ExtentReports();
-                Thread.Sleep(1000);
+                Driver.driver.Manage().Timeouts().ImplicitWait = TimeSpan.FromSeconds(10);
                 CommonMethods.Test = CommonMethods.Extent.StartTest("Add a Language");
 
-                Thread.Sleep(1000);
+                Driver.driver.Manage().Timeouts().ImplicitWait = TimeSpan.FromSeconds(10);
                 string expectedValue = language;
                 for (var i = 1; i <= 4; i++)
                 {
@@ -127,14 +127,50 @@ namespace SpecflowTests.StepDefinitions
             SkillShare skill = new SkillShare();
             skill.AddSkill();
         }
-
+        SkillShare validatedSkill;
         [Then(@"skill should display in Manage listings")]
+        
         public void ThenSkillShouldDisplayInManageListings()
         {
-            SkillShare skill1 = new SkillShare();
-            skill1.ValidateTheSkillAdded();
+            validatedSkill = new SkillShare();
+            validatedSkill.ValidateTheSkillAdded();
         }
 
+        [When(@"user click on manage listings and click on edit listing")]
+        public void WhenUserClickOnManageListingsAndClickOnEditListing()
+        {
+            // Explicit wait for Manage Listings tab
+ 
+             WebDriverWait skillSharewait = new WebDriverWait(Driver.driver, TimeSpan.FromSeconds(20));
+            IWebElement skillShareObj = skillSharewait.Until(SeleniumExtras.WaitHelpers.ExpectedConditions.ElementToBeClickable(By.XPath("//a[contains(text(),'Manage Listings')]")));
+            Driver.driver.FindElement(By.XPath("//a[contains(text(),'Manage Listings')]")).Click();
+        }
+
+        [Then(@"skill should display with new updates")]
+        public void ThenSkillShouldDisplayWithNewUpdates()
+        {
+            validatedSkill = new SkillShare();
+            validatedSkill.UpdateSkill();
+        }
+        SkillShare delSkill;
+        [When(@"user click on manage listings and click on delete listing")]
+        public void WhenUserClickOnManageListingsAndClickOnDeleteListing()
+        {
+            // Explicit wait for Manage Listings tab
+            WebDriverWait skillSharewait = new WebDriverWait(Driver.driver, TimeSpan.FromSeconds(20));
+            IWebElement skillShareObj = skillSharewait.Until(SeleniumExtras.WaitHelpers.ExpectedConditions.ElementToBeClickable(By.XPath("//a[contains(text(),'Manage Listings')]")));
+            Driver.driver.FindElement(By.XPath("//a[contains(text(),'Manage Listings')]")).Click();
+
+            delSkill = new SkillShare();
+            delSkill.DeleteSkill();
+        }
+
+        [Then(@"skill should not display in listings")]
+        public void ThenSkillShouldNotDisplayInListings()
+        {
+            delSkill = new SkillShare();
+            delSkill.ValidateSkillDeleted();
+        }
 
     }
 }

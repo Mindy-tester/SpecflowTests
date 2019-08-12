@@ -12,7 +12,7 @@ using static SpecflowPages.Helpers.CommonMethods;
 
 namespace SpecflowTests.Utils
 {
-    public class Start : Driver
+    public class Start: Driver
     {
         [BeforeScenario]
         public void SetUp()
@@ -21,10 +21,11 @@ namespace SpecflowTests.Utils
             Initialize();
             Driver.driver.Manage().Timeouts().ImplicitWait = TimeSpan.FromSeconds(10);
 
-
+            Driver.NavigateUrl();
+            Driver.driver.Manage().Timeouts().ImplicitWait = TimeSpan.FromSeconds(10);
             //Call the Login Class            
-            LoginPage.LoginStep();         
-                      
+            //LoginPage.LoginStep();         
+
         }
 
         [AfterScenario]

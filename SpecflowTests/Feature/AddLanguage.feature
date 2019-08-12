@@ -1,4 +1,4 @@
-﻿Feature: SpecFlowFeature1
+﻿Feature: Add Language
 		In order to update my profile
 	As a skill trader
 	I want to add, update, delete language

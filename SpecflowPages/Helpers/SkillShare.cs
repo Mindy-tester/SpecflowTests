@@ -16,46 +16,33 @@ namespace SpecflowPages.Helpers
         public void AddSkill()
         {
             //add title
+            CommonMethods.WaitForElement(Driver.driver, By.XPath("//h3[contains(text(),'Title')]"), 10);
             IWebElement addTitle = Driver.driver.FindElement(By.Name("title"));
             addTitle.SendKeys("Testing1");
-
-
             //add description
             IWebElement addDescription = Driver.driver.FindElement(By.Name("description"));
             addDescription.SendKeys("This is specflow");
-
-            //add category
             //Select Category
+            CommonMethods.WaitForElement(Driver.driver, By.XPath("//h3[contains(text(),'Title')]"), 10);
             SelectElement categoryObj = new SelectElement(Driver.driver.FindElement(By.Name("categoryId")));
             categoryObj.SelectByValue("3");
-
-
-
             //Explicit wait for sub category
-            WebDriverWait subCategoryWait = new WebDriverWait(Driver.driver, TimeSpan.FromSeconds(30));
-            IWebElement subCategory = subCategoryWait.Until(SeleniumExtras.WaitHelpers.ExpectedConditions.ElementToBeClickable(By.Name("subcategoryId")));
-
+            CommonMethods.waitUntilClickable(Driver.driver, 1000, "(//select[@name='subcategoryId'])", "XPath");
             //Select Sub Category
             SelectElement subCategoryObj = new SelectElement(Driver.driver.FindElement(By.Name("subcategoryId")));
-
             subCategoryObj.SelectByIndex(2);
-
             //add Tags
             IWebElement addTags = Driver.driver.FindElement(By.XPath("//body/div/div/div[@id='service-listing-section']/div[contains(@class,'ui container')]/div[contains(@class,'listing')]/form[contains(@class,'ui form')]/div[contains(@class,'tooltip-target ui grid')]/div[contains(@class,'twelve wide column')]/div[contains(@class,'')]/div[contains(@class,'ReactTags__tags')]/div[contains(@class,'ReactTags__selected')]/div[contains(@class,'ReactTags__tagInput')]/input[1]"));
             addTags.SendKeys("New");
             addTags.SendKeys(Keys.Enter);
-
             //Select SkillTrade
             IWebElement skillTradeObj = Driver.driver.FindElement(By.XPath("//div[@class='form-wrapper']//input[@placeholder='Add new tag']"));
             skillTradeObj.SendKeys("tag");
             skillTradeObj.SendKeys(Keys.Enter);
-
-            Driver.driver.Manage().Timeouts().ImplicitWait = TimeSpan.FromSeconds(10);
             //click on save
+            CommonMethods.waitUntilClickable(Driver.driver, 1000, "(//input[@value = 'Save'])", "XPath");
             IWebElement saveBtn = Driver.driver.FindElement(By.XPath("//input[@value = 'Save']"));
             saveBtn.Click();
-
-
         }
 
         public void ValidateTheSkillAdded()
@@ -71,14 +58,14 @@ namespace SpecflowPages.Helpers
             CommonMethods.Test = CommonMethods.Extent.StartTest("Add a skill");
             for (int i = 0; i <= noOfPages.Count; i++)
             {
-                
+
                 for (int j = 1; j <= 5; j++)
 
                 {
                     var titleObj = Driver.driver.FindElement(By.XPath("//*[@id='listing-management-section']/div[2]/div[1]/table/tbody/tr[" + j + "]/td[3]")).Text;
-                   
+
                     Driver.driver.Manage().Timeouts().ImplicitWait = TimeSpan.FromSeconds(10);
-                    
+
                     if (titleObj == "Testing1")
                     {
                         CommonMethods.Test.Log(LogStatus.Pass, "Skill added Successfully");
@@ -101,26 +88,25 @@ namespace SpecflowPages.Helpers
 
             CommonMethods.Test = CommonMethods.Extent.StartTest("update a skill");
 
-            IList<IWebElement> noOfPages = Driver.driver.FindElements(By.XPath("//button[@class='ui button otherPage']"));
-            for (int i = 0; i <= noOfPages.Count; i++)
+            while (true)
             {
 
                 for (int j = 1; j <= 5; j++)
 
                 {
-                    Driver.driver.Manage().Timeouts().ImplicitWait = TimeSpan.FromSeconds(10);
-                    var titleObj = Driver.driver.FindElement(By.XPath("//*[@id='listing-management-section']/div[2]/div[1]/table/tbody/tr[" + j + "]/td[3]")).Text;
-                    var categoryObj = Driver.driver.FindElement(By.XPath("//*[@id='listing-management-section']/div[2]/div[1]/table/tbody/tr[" + j + "]/td[2]")).Text;
+                    CommonMethods.WaitForElement(Driver.driver, By.XPath("//tr[1]//td[3]"), 10);
+                    var categoryObj = Driver.driver.FindElement(By.XPath("//tr[" + j + "]//td[2]")).Text;
+                    var titleObj = Driver.driver.FindElement(By.XPath("//tr[" + j + "]//td[3]")).Text;
 
-                    IWebElement updateListing = Driver.driver.FindElement(By.XPath("//*[@id='listing-management-section']/div[2]/div[1]/table/tbody/tr[" + j + "]/td[8]/i[2]"));
-                    Driver.driver.Manage().Timeouts().ImplicitWait = TimeSpan.FromSeconds(10);
+                    IWebElement updateListing = Driver.driver.FindElement(By.XPath("//tr[" + j + "]//td[8]//i[2]"));
+                    CommonMethods.Wait(10);
                     if (titleObj == "ttt" && categoryObj == "Programming & Tech")
                     {
-                        Driver.driver.Manage().Timeouts().ImplicitWait = TimeSpan.FromSeconds(10);
+                        //wait for update btn
+                        CommonMethods.waitUntilClickable(Driver.driver, 1000, "(//tr[" + j + "]//td[8]//i[2])", "XPath");
                         updateListing.Click();
-                        Driver.driver.Manage().Timeouts().ImplicitWait = TimeSpan.FromSeconds(10);
+                        CommonMethods.Wait(10);
                         updSkillObj.AddSkill();
-                        CommonMethods.Test.Log(LogStatus.Pass, "Skill updated Successfully");
                         return;
                     }
                 }
@@ -129,47 +115,42 @@ namespace SpecflowPages.Helpers
 
             }
 
-         }
+        }
         public void DeleteSkill()
         {
-            WebDriverWait wait1 = new WebDriverWait(Driver.driver, TimeSpan.FromSeconds(20));
-            IWebElement element1 = wait1.Until(SeleniumExtras.WaitHelpers.ExpectedConditions.ElementIsVisible(By.XPath("//h2[contains(text(),'Manage Listings')]")));
-            
-            IList<IWebElement> noOfPages = Driver.driver.FindElements(By.XPath("//button[@class='ui button otherPage']"));
+            while (true)
+            {
 
-                for (int i = 0; i <= noOfPages.Count; i++)
+                for (int j = 1; j <= 5; j++)
+
                 {
+                    CommonMethods.WaitForElement(Driver.driver, By.XPath("//tr[1]//td[3]"), 10);
+                    var categoryObj = Driver.driver.FindElement(By.XPath("//tr[" + j + "]//td[2]")).Text;
+                    var titleObj = Driver.driver.FindElement(By.XPath("//tr[" + j + "]//td[3]")).Text;
 
-                    for (int j = 1; j <= 5; j++)
+                    Console.WriteLine(titleObj);
+                    Console.WriteLine(categoryObj);
+                    IWebElement deleteListing = Driver.driver.FindElement(By.XPath("//tr[" + j + "]//td[8]//i[3]"));
 
+                    CommonMethods.Wait(10);
+                    if (titleObj == "Testing")
                     {
-                        var titleObj = Driver.driver.FindElement(By.XPath("//*[@id='listing-management-section']/div[2]/div[1]/table/tbody/tr[" + j + "]/td[3]")).Text;
-                        //var categoryObj = Driver.driver.FindElement(By.XPath("//*[@id='listing-management-section']/div[2]/div[1]/table/tbody/tr[" + j + "]/td[2]")).Text;
-                       
-                        IWebElement deleteListing = Driver.driver.FindElement(By.XPath("//*[@id='listing-management-section']/div[2]/div[1]/table/tbody/tr[" + j + " ]/td[8]/i[3]"));
+                        //wait for delete btn
+                        CommonMethods.waitUntilClickable(Driver.driver, 1000, "(//tr[" + j + "]//td[8]//i[3])", "XPath");
 
-                        Driver.driver.Manage().Timeouts().ImplicitWait = TimeSpan.FromSeconds(10);
-                        if (titleObj == "Testing1")
-                        {
-                            //Explicit wait for delete btn
-                            WebDriverWait deleteListingWait = new WebDriverWait(Driver.driver, TimeSpan.FromSeconds(10));
-                            IWebElement deleteListingObj = deleteListingWait.Until(SeleniumExtras.WaitHelpers.ExpectedConditions.ElementToBeClickable(By.XPath("//*[@id='listing-management-section']/div[2]/div[1]/table/tbody/tr[" + j + " ]/td[8]/i[3]")));
-                            deleteListing.Click();
-                            //Explicit wait for accept btn
-                            WebDriverWait acceptBtnWait = new WebDriverWait(Driver.driver, TimeSpan.FromSeconds(10));
-                            IWebElement acceptBtnObj = acceptBtnWait.Until(SeleniumExtras.WaitHelpers.ExpectedConditions.ElementToBeClickable(By.XPath("//button[@class='ui icon positive right labeled button']")));
-                           Driver.driver.FindElement(By.XPath("//button[@class='ui icon positive right labeled button']"));
-
-                            return;
-
-                        }
+                        deleteListing.Click();
+                        //wait for accept btn
+                        CommonMethods.waitUntilClickable(Driver.driver, 1000, "(//button[@class='ui icon positive right labeled button'])", "XPath");
+                        Driver.driver.FindElement(By.XPath("//button[@class='ui icon positive right labeled button']")).Click();
+                        return;
                     }
-                    // click next page
+                }// click next page
                 Driver.driver.FindElement(By.XPath("//button[contains(text(),'>')]")).Click();
-                }
-                   
-                
+
+            }
+
         }
+
 
         public void ValidateSkillDeleted()
         {
@@ -195,7 +176,6 @@ namespace SpecflowPages.Helpers
                             Driver.driver.Manage().Timeouts().ImplicitWait = TimeSpan.FromSeconds(10);
                             CommonMethods.Test.Log(LogStatus.Info, "Skill deleted failed");
                         }
-
                     }
                     //click next page
                     Driver.driver.FindElement(By.XPath("//button[contains(text(),'>')]")).Click();
@@ -206,8 +186,8 @@ namespace SpecflowPages.Helpers
                 CommonMethods.Test.Log(LogStatus.Pass, "Skill deleted passed");
             }
         }
-    } 
-    
+    }
+
 }
 
 

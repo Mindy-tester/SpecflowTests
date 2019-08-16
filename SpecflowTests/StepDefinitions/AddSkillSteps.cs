@@ -2,6 +2,7 @@
 using RelevantCodes.ExtentReports;
 using SpecflowPages.Helpers;
 using System;
+using System.Threading;
 using TechTalk.SpecFlow;
 using static SpecflowPages.Helpers.CommonMethods;
 
@@ -38,10 +39,30 @@ namespace SpecflowTests
         [Then(@"the skills should be added")]
         public void ThenTheSkillsShouldBeAdded()
         {
-            CommonMethods.ExtentReports();
-            CommonMethods.Test = CommonMethods.Extent.StartTest("Add a Skill");
-            CommonMethods.Test.Log(LogStatus.Pass, "Test Passed, Added a Skill successfully");
-            SaveScreenShotClass.SaveScreenshot(Driver.driver, "Skill Added");
+            try
+            {
+                //Start the Reports
+                CommonMethods.ExtentReports();
+                CommonMethods.Wait(10);
+                CommonMethods.Test = CommonMethods.Extent.StartTest("Add a Skill");
+                Thread.Sleep(1000);
+                string expectedValue = "Postman";
+                var actualValue = Driver.driver.FindElement(By.XPath("//table[@class='ui fixed table']//preceding-sibling::td")).Text;
+                Thread.Sleep(1000);
+
+
+                if (expectedValue == actualValue)
+                {
+                    CommonMethods.Test.Log(LogStatus.Pass, "Test Passed, Added a Skill Successfully");
+                    SaveScreenShotClass.SaveScreenshot(Driver.driver, "Skill added");
+
+                }
+
+            }
+            catch (Exception e)
+            {
+                CommonMethods.Test.Log(LogStatus.Fail, "Test Failed", e.Message);
+            }
         }
     }
 }

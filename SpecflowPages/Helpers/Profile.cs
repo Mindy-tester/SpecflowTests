@@ -29,7 +29,7 @@ namespace SpecflowPages.Helpers
                 if (codeText == "French")
                 {
                     //click on pencil icon
-                    Driver.driver.FindElement(By.XPath("//*[@id='account-profile-section']/tbody[" + i + "]/tr/td[3]/span[1]/i")).Click();
+                    Driver.driver.FindElement(By.XPath("//div[@class='ui bottom attached tab segment active tooltip-target']//tbody[" + i + "]//tr[1]//td[3]//span[1]//i[1]")).Click();
                     //clear existing language
                     Driver.driver.FindElement(By.XPath("//*[@id='account-profile-section']/tbody[" + i + "]/tr/td/div/div[1]/input")).Clear();
                     //update new language
@@ -53,7 +53,7 @@ namespace SpecflowPages.Helpers
             {
                 var deleteText = Driver.driver.FindElement(By.XPath("//*[@id='account-profile-section']/tbody[" + i + "]/tr/td[1]")).Text;
                 Console.WriteLine(deleteText);
-                if (deleteText == ExcelData.ReadData(5, "Language"))
+                if (deleteText =="Hindi")
                 {
                     //click on delete icon
                     Driver.driver.FindElement(By.XPath("//*[@id='account-profile-section']/tbody[" + i + "]/tr/td[3]/span[2]/i")).Click();

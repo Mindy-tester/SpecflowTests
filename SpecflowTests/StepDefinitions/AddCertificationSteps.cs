@@ -10,7 +10,7 @@ namespace SpecflowTests
 {
     [Binding]
     public class AddCertificationSteps
-    {
+        {
 
         [Given(@"I navigate the Certifications tab under Profile page")]
         public void GivenINavigateTheCertificationsTabUnderProfilePage()
@@ -42,14 +42,39 @@ namespace SpecflowTests
             Driver.driver.FindElement(By.XPath("//input[@value = 'Add']")).Click();
             CommonMethods.Wait(10);
         }
+
         [Then(@"new certicifation should be added")]
         public void ThenNewCerticifationShouldBeAdded()
         {
-            CommonMethods.ExtentReports();
-            CommonMethods.Test = CommonMethods.Extent.StartTest("Add a Certification");
-            CommonMethods.Test.Log(LogStatus.Pass, "Test Passed, Added a certification successfully");
-            SaveScreenShotClass.SaveScreenshot(Driver.driver, "Certification Added");
-        }
+            try
+            {
+                //Start the Reports
+                CommonMethods.ExtentReports();
+                CommonMethods.Wait(10);
+                CommonMethods.Test = CommonMethods.Extent.StartTest("Add a Certification");
+                Thread.Sleep(1000);
+                string expectedValue = "ISTQB";
+                var actualValue = Driver.driver.FindElement(By.XPath("//table[@class='ui fixed table']//preceding-sibling::td")).Text;
+                Thread.Sleep(1000);
 
+
+                if (expectedValue == actualValue)
+                {
+                    CommonMethods.Test.Log(LogStatus.Pass, "Test Passed, Added a Certification Successfully");
+                    SaveScreenShotClass.SaveScreenshot(Driver.driver, "Certification Added");
+
+                }
+
+            }
+            catch (Exception e)
+            {
+                CommonMethods.Test.Log(LogStatus.Fail, "Test Failed", e.Message);
+            }
+
+
+
+
+
+        }
     }
-}
+    }

@@ -2,6 +2,7 @@
 using RelevantCodes.ExtentReports;
 using SpecflowPages.Helpers;
 using System;
+using System.Threading;
 using TechTalk.SpecFlow;
 using TechTalk.SpecFlow.Assist;
 using static SpecflowPages.Helpers.CommonMethods;
@@ -40,11 +41,29 @@ namespace SpecflowTests
         [Then(@"I should be registered")]
         public void ThenIShouldBeRegistered()
         {
-            CommonMethods.ExtentReports();
-            Driver.driver.Manage().Timeouts().ImplicitWait = TimeSpan.FromSeconds(10);
-            CommonMethods.Test = CommonMethods.Extent.StartTest("Add New user");
-            CommonMethods.Test.Log(LogStatus.Pass, "Test Passed, Registration successfully");
-            SaveScreenShotClass.SaveScreenshot(Driver.driver, "Register a user");
+            try
+            {
+                //Start the Reports
+                CommonMethods.ExtentReports();
+                CommonMethods.Wait(10);
+                CommonMethods.Test = CommonMethods.Extent.StartTest("Add new user");
+                Thread.Sleep(1000);
+                string expectedValue = "Registration Successfully, Please verify your email!";
+                string actualValue = Driver.driver.FindElement(By.XPath("//div[contains(@class,'ns-box-inner')]")).Text;
+                Thread.Sleep(1000);
+
+                if (expectedValue == actualValue)
+                {
+                    CommonMethods.Test.Log(LogStatus.Pass, "Test Passed, Added User details Successfully");
+                    SaveScreenShotClass.SaveScreenshot(Driver.driver, "User Details Added");
+
+                }
+
+            }
+            catch (Exception e)
+            {
+                CommonMethods.Test.Log(LogStatus.Fail, "Test Failed", e.Message);
+            }
         }
 
     }

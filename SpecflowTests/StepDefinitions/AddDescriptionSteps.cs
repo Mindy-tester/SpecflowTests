@@ -2,6 +2,7 @@
 using RelevantCodes.ExtentReports;
 using SpecflowPages.Helpers;
 using System;
+using System.Threading;
 using TechTalk.SpecFlow;
 using static SpecflowPages.Helpers.CommonMethods;
 
@@ -25,6 +26,7 @@ namespace SpecflowTests
         [Given(@"I added description and click save")]
         public void GivenIAddedDescriptionAndClickSave()
         {
+
             //clear Description
             Driver.driver.FindElement(By.XPath("//textarea[@name = 'value']")).Clear();
             //Add Description
@@ -36,10 +38,32 @@ namespace SpecflowTests
         [Then(@"Description should be added")]
         public void ThenDescriptionShouldBeAdded()
         {
-            CommonMethods.ExtentReports();
-            CommonMethods.Test = CommonMethods.Extent.StartTest("Add a Description");
-            CommonMethods.Test.Log(LogStatus.Pass, "Test Passed, Added a Description successfully");
-            SaveScreenShotClass.SaveScreenshot(Driver.driver, "Description Added");
+            try
+            {
+                //Start the Reports
+                CommonMethods.ExtentReports();
+                CommonMethods.Wait(10);
+                CommonMethods.Test = CommonMethods.Extent.StartTest("Add a Desription");
+                Thread.Sleep(1000);
+                string expectedValue = "Certified QA";
+                string actualValue = Driver.driver.FindElement(By.XPath("//textarea[@name = 'value']")).Text;
+                Thread.Sleep(1000);
+                if (expectedValue == actualValue)
+                {
+                    CommonMethods.Test.Log(LogStatus.Pass, "Test Passed, Added a Description Successfully");
+                    SaveScreenShotClass.SaveScreenshot(Driver.driver, "DesriptionAdded");
+
+                }
+                else
+                {
+                    CommonMethods.Test.Log(LogStatus.Fail, "Test Failed");
+                }
+            }
+
+            catch (Exception e)
+            {
+                CommonMethods.Test.Log(LogStatus.Fail, "Test Failed", e.Message);
+            }
         }
     }
 }

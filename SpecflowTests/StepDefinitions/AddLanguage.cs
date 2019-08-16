@@ -83,10 +83,30 @@ namespace SpecflowTests.StepDefinitions
         [Then(@"the updated language should display on my listings")]
         public void ThenTheUpdatedLanguageShouldDisplayOnMyListings()
         {
-            CommonMethods.ExtentReports();
-            CommonMethods.Test = CommonMethods.Extent.StartTest("Update a language");
-            CommonMethods.Test.Log(LogStatus.Pass, "Test Passed, update language successfully");
-            SaveScreenShotClass.SaveScreenshot(Driver.driver, "Language updated");
+            try
+            {
+                //Start the Reports
+                CommonMethods.ExtentReports();
+                CommonMethods.Wait(10);
+                CommonMethods.Test = CommonMethods.Extent.StartTest("Update a Language");
+                Thread.Sleep(1000);
+                string expectedValue = "French";
+                var actualValue = Driver.driver.FindElement(By.XPath("//table[@class='ui fixed table']//preceding-sibling::td")).Text;
+                Thread.Sleep(1000);
+
+
+                if (expectedValue == actualValue)
+                {
+                    CommonMethods.Test.Log(LogStatus.Pass, "Test Passed, updated a Language Successfully");
+                    SaveScreenShotClass.SaveScreenshot(Driver.driver, "Language updated");
+
+                }
+
+            }
+            catch (Exception e)
+            {
+                CommonMethods.Test.Log(LogStatus.Fail, "Test Failed", e.Message);
+            }
 
         }
         [When(@"I clicked on delete icon")]
@@ -99,10 +119,30 @@ namespace SpecflowTests.StepDefinitions
         [Then(@"the deleted language should not display on my listings")]
         public void ThenTheDeletedLanguageShouldNotDisplayOnMyListings()
         {
-            CommonMethods.ExtentReports();
-            CommonMethods.Test = CommonMethods.Extent.StartTest("Delete a language");
-            CommonMethods.Test.Log(LogStatus.Pass, "Test Passed, Delete language successfully");
-            SaveScreenShotClass.SaveScreenshot(Driver.driver, "Language deleted");
+            try
+            {
+                //Start the Reports
+                CommonMethods.ExtentReports();
+                CommonMethods.Wait(10);
+                CommonMethods.Test = CommonMethods.Extent.StartTest("delete a Language");
+                Thread.Sleep(1000);
+                string expectedValue = "Hindi";
+                var actualValue = Driver.driver.FindElement(By.XPath("//table[@class='ui fixed table']//preceding-sibling::td")).Text;
+                Thread.Sleep(1000);
+
+
+                if (expectedValue == actualValue)
+                {
+                    CommonMethods.Test.Log(LogStatus.Pass, "Test Passed, delete a Language failed");
+                    SaveScreenShotClass.SaveScreenshot(Driver.driver, "deleted language");
+
+                }
+
+            }
+            catch (Exception e)
+            {
+                CommonMethods.Test.Log(LogStatus.Fail, "Test passed", e.Message);
+            }
         }
 
 

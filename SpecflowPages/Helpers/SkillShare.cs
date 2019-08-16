@@ -47,16 +47,14 @@ namespace SpecflowPages.Helpers
 
         public void ValidateTheSkillAdded()
         {
-            WebDriverWait wait1 = new WebDriverWait(Driver.driver, TimeSpan.FromSeconds(20));
-            IWebElement element1 = wait1.Until(SeleniumExtras.WaitHelpers.ExpectedConditions.ElementIsVisible(By.XPath("//h2[contains(text(),'Manage Listings')]")));
+            CommonMethods.WaitForElement(Driver.driver, By.XPath("//h2[contains(text(),'Manage Listings')]"), 10);
             IList<IWebElement> noOfPages = Driver.driver.FindElements(By.XPath("//button[@class='ui button otherPage']"));
-
             //Start the Reports
             CommonMethods.ExtentReports();
             Thread.Sleep(1000);
 
-            CommonMethods.Test = CommonMethods.Extent.StartTest("Add a skill");
-            for (int i = 0; i <= noOfPages.Count; i++)
+            CommonMethods.Test = CommonMethods.Extent.StartTest("Share skill");
+            while (true)
             {
 
                 for (int j = 1; j <= 5; j++)
@@ -68,7 +66,7 @@ namespace SpecflowPages.Helpers
 
                     if (titleObj == "Testing1")
                     {
-                        CommonMethods.Test.Log(LogStatus.Pass, "Skill added Successfully");
+                        CommonMethods.Test.Log(LogStatus.Pass, "Skill Shared Successfully");
                         return;
                     }
 
@@ -133,7 +131,7 @@ namespace SpecflowPages.Helpers
                     IWebElement deleteListing = Driver.driver.FindElement(By.XPath("//tr[" + j + "]//td[8]//i[3]"));
 
                     CommonMethods.Wait(10);
-                    if (titleObj == "Testing")
+                    if (titleObj == "API")
                     {
                         //wait for delete btn
                         CommonMethods.waitUntilClickable(Driver.driver, 1000, "(//tr[" + j + "]//td[8]//i[3])", "XPath");
@@ -171,7 +169,7 @@ namespace SpecflowPages.Helpers
                         var titleObj = Driver.driver.FindElement(By.XPath("//*[@id='listing-management-section']/div[2]/div[1]/table/tbody/tr[" + j + "]/td[3]")).Text;
                         var categoryObj = Driver.driver.FindElement(By.XPath("//*[@id='listing-management-section']/div[2]/div[1]/table/tbody/tr[" + j + "]/td[2]")).Text;
 
-                        if (titleObj == "Testing1")
+                        if (titleObj == "API")
                         {
                             Driver.driver.Manage().Timeouts().ImplicitWait = TimeSpan.FromSeconds(10);
                             CommonMethods.Test.Log(LogStatus.Info, "Skill deleted failed");

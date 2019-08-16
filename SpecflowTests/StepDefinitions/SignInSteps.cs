@@ -21,7 +21,7 @@ namespace SpecflowTests
             // Enter Username
             Driver.driver.FindElement(By.XPath("//input[@placeholder='Email address']")).SendKeys("minty80@gmail.com");
             //Enter password
-            Driver.driver.FindElement(By.XPath("//input[@placeholder='Password']")).SendKeys("123123");
+            Driver.driver.FindElement(By.XPath("//input[@placeholder='Password']")).SendKeys("121212");
         }
         [Given(@"I click login")]
         public void GivenIClickLogin()
@@ -35,7 +35,7 @@ namespace SpecflowTests
         {
             //Start the Reports
             CommonMethods.ExtentReports();
-            Driver.driver.Manage().Timeouts().ImplicitWait = TimeSpan.FromSeconds(10);
+            CommonMethods.Wait(10);
             CommonMethods.Test = CommonMethods.Extent.StartTest("Login");
             var text = Driver.driver.FindElement(By.XPath("//a[contains(text(),'Mars Logo')]")).Text;
             Console.WriteLine(text);

@@ -52,11 +52,30 @@ namespace SpecflowTests
         [Then(@"the new education should be added")]
         public void ThenTheNewEducationShouldBeAdded()
         {
-            CommonMethods.ExtentReports();
-            Driver.driver.Manage().Timeouts().ImplicitWait = TimeSpan.FromSeconds(10);
-            CommonMethods.Test = CommonMethods.Extent.StartTest("Add a Education");
-            CommonMethods.Test.Log(LogStatus.Pass, "Test Passed, Added a Education successfully");
-            SaveScreenShotClass.SaveScreenshot(Driver.driver, "Education Added");
+            try
+            {
+                //Start the Reports
+                CommonMethods.ExtentReports();
+                CommonMethods.Wait(10);
+                CommonMethods.Test = CommonMethods.Extent.StartTest("Add a Education");
+                Thread.Sleep(1000);
+                string expectedValue = "CGC";
+                var actualValue = Driver.driver.FindElement(By.XPath("//table[@class='ui fixed table']//preceding-sibling::td")).Text;
+                Thread.Sleep(1000);
+
+
+                if (expectedValue == actualValue)
+                {
+                    CommonMethods.Test.Log(LogStatus.Pass, "Test Passed, Added a Education Successfully");
+                    SaveScreenShotClass.SaveScreenshot(Driver.driver, "Education Added");
+
+                }
+
+            }
+            catch (Exception e)
+            {
+                CommonMethods.Test.Log(LogStatus.Fail, "Test Failed", e.Message);
+            }
         }
     }
 }

@@ -31,7 +31,7 @@ namespace SpecflowTests.Utils
         [AfterScenario]
         public void TearDown()
         {
-            driver.Manage().Timeouts().ImplicitWait = TimeSpan.FromSeconds(10);
+            CommonMethods.Wait(10);
             // Screenshot
             string img = SaveScreenShotClass.SaveScreenshot(driver, "Report");
             Test.Log(LogStatus.Info, "Snapshot below: " + Test.AddScreenCapture(img));

@@ -20,7 +20,7 @@ namespace SpecflowPages.Helpers
             //Enter Username
             Driver.driver.FindElement(By.XPath("//input[@placeholder='Email address']")).SendKeys("minty80@gmail.com");
             //Enter password
-            Driver.driver.FindElement(By.XPath("//input[@placeholder='Password']")).SendKeys("123123");
+            Driver.driver.FindElement(By.XPath("//input[@placeholder='Password']")).SendKeys("121212");
             CommonMethods.waitUntilClickable(Driver.driver, 1000, "(//button[contains(text(), 'Login')])", "XPath");
             //Click on Login Button
             Driver.driver.FindElement(By.XPath("//button[contains(text(), 'Login')]")).Click();

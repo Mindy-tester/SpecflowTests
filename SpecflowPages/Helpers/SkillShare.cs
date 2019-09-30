@@ -8,6 +8,7 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using static SpecflowPages.Helpers.CommonMethods;
+using AutoItX3Lib;
 
 namespace SpecflowPages.Helpers
 {
@@ -17,8 +18,9 @@ namespace SpecflowPages.Helpers
         {
             //add title
             CommonMethods.WaitForElement(Driver.driver, By.XPath("//h3[contains(text(),'Title')]"), 10);
+            
             IWebElement addTitle = Driver.driver.FindElement(By.Name("title"));
-            addTitle.SendKeys("Testing1");
+            addTitle.SendKeys("mmm");
             //add description
             IWebElement addDescription = Driver.driver.FindElement(By.Name("description"));
             addDescription.SendKeys("This is specflow");
@@ -32,20 +34,35 @@ namespace SpecflowPages.Helpers
             SelectElement subCategoryObj = new SelectElement(Driver.driver.FindElement(By.Name("subcategoryId")));
             subCategoryObj.SelectByIndex(2);
             //add Tags
-            IWebElement addTags = Driver.driver.FindElement(By.XPath("//body/div/div/div[@id='service-listing-section']/div[contains(@class,'ui container')]/div[contains(@class,'listing')]/form[contains(@class,'ui form')]/div[contains(@class,'tooltip-target ui grid')]/div[contains(@class,'twelve wide column')]/div[contains(@class,'')]/div[contains(@class,'ReactTags__tags')]/div[contains(@class,'ReactTags__selected')]/div[contains(@class,'ReactTags__tagInput')]/input[1]"));
+            IWebElement addTags = Driver.driver.FindElement(By.XPath("(//input[@placeholder = 'Add new tag'])[1]"));
             addTags.SendKeys("New");
             addTags.SendKeys(Keys.Enter);
+            //Select Service type
+
+            IWebElement serviceType = Driver.driver.FindElement(By.XPath("//label[contains(text(),'One-off service')]"));
+            serviceType.Click();
+
+            if(serviceType.Selected == true)
+            {
+                CommonMethods.Test.Log(LogStatus.Pass, "one off service selected");
+            }
+
             //Select SkillTrade
             IWebElement skillTradeObj = Driver.driver.FindElement(By.XPath("//div[@class='form-wrapper']//input[@placeholder='Add new tag']"));
             skillTradeObj.SendKeys("tag");
             skillTradeObj.SendKeys(Keys.Enter);
+
+            
+
             //click on save
             CommonMethods.waitUntilClickable(Driver.driver, 1000, "(//input[@value = 'Save'])", "XPath");
             IWebElement saveBtn = Driver.driver.FindElement(By.XPath("//input[@value = 'Save']"));
             saveBtn.Click();
         }
 
-        public void ValidateTheSkillAdded()
+
+
+        public void ValidateTheSkillAdded(string Title)
         {
             CommonMethods.WaitForElement(Driver.driver, By.XPath("//h2[contains(text(),'Manage Listings')]"), 10);
             IList<IWebElement> noOfPages = Driver.driver.FindElements(By.XPath("//button[@class='ui button otherPage']"));
@@ -54,28 +71,40 @@ namespace SpecflowPages.Helpers
             Thread.Sleep(1000);
 
             CommonMethods.Test = CommonMethods.Extent.StartTest("Share skill");
-            while (true)
+            IWebElement tableElement = Driver.driver.FindElement(By.XPath("//table[@class='ui striped table']"));
+
+            IList<IWebElement> titleObj = tableElement.FindElements(By.TagName("tr"));
+
+            foreach (var titleO in titleObj)
             {
-
-                for (int j = 1; j <= 5; j++)
-
+                if(titleO.Text.Contains(Title)) 
                 {
-                    var titleObj = Driver.driver.FindElement(By.XPath("//*[@id='listing-management-section']/div[2]/div[1]/table/tbody/tr[" + j + "]/td[3]")).Text;
-
-                    Driver.driver.Manage().Timeouts().ImplicitWait = TimeSpan.FromSeconds(10);
-
-                    if (titleObj == "Testing1")
-                    {
-                        CommonMethods.Test.Log(LogStatus.Pass, "Skill Shared Successfully");
-                        return;
-                    }
-
+                    CommonMethods.Test.Log(LogStatus.Pass, "Skill Shared Successfully");
+                    break;
                 }
+            }
+            //while (true)
+            //{
+
+            //    for (int j = 1; j <= 5; j++)
+
+            //    {
+            //        var titleObj = Driver.driver.FindElement(By.XPath("//*[@id='listing-management-section']/div[2]/div[1]/table/tbody/tr[" + j + "]/td[3]")).Text;
+
+            //        Driver.driver.Manage().Timeouts().ImplicitWait = TimeSpan.FromSeconds(10);
+
+            //        if (titleObj == "Testing1")
+            //        {
+            //            CommonMethods.Test.Log(LogStatus.Pass, "Skill Shared Successfully");
+            //            return;
+            //        }
+
+            //    }
                 //click next page
-                Driver.driver.FindElement(By.XPath("//button[contains(text(),'>')]")).Click();
+               // Driver.driver.FindElement(By.XPath("//button[contains(text(),'>')]")).Click();
             }
 
-        }
+        
         public void UpdateSkill()
         {
 

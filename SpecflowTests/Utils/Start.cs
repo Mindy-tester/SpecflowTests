@@ -20,6 +20,7 @@ namespace SpecflowTests.Utils
             //Launch the browser
             Initialize();
             Driver.driver.Manage().Timeouts().ImplicitWait = TimeSpan.FromSeconds(10);
+            
 
             Driver.NavigateUrl();
             Driver.driver.Manage().Timeouts().ImplicitWait = TimeSpan.FromSeconds(10);
